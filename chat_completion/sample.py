@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Python Modules
+# Python Default Modules
 import sys
 
 # Third Party Modules
 from openai import OpenAI
-from openai.types.chat import ChatCompletion, ChatCompletionMessage
+from openai.types.chat import (
+    ChatCompletion,
+    ChatCompletionMessage
+)
 
 
 """
@@ -15,8 +18,8 @@ Use this script to request OpenAI Chat Completion API.
 GPT Model: gpt-4o-mini
 
 Versions:
-    Ptython: 3.12.2
-    openai: 1.37.1
+    python==3.12.2
+    openai==1.37.1
 """
 
 
@@ -24,10 +27,7 @@ Versions:
 gpt_model: str = "gpt-4o-mini"
 
 
-def request_openai(
-    api_key: str,
-    request_content: str,
-) -> str | None:
+def request_openai(api_key: str, request_content: str) -> str:
     """Request to OpenAI API
 
     Args:
@@ -35,7 +35,7 @@ def request_openai(
         request_content (str): Request Content
 
     Returns:
-        str | None: Response Message
+        str: Response Message
     """
     try:
         # OpenAI Client
@@ -60,7 +60,7 @@ def request_openai(
         print(chat_completion)
 
         # Response Content
-        response_content = ""
+        response_content: str = ""
         for _choice in chat_completion.choices:
             _message: ChatCompletionMessage = _choice.message
             _content: str | None = _message.content
@@ -75,9 +75,10 @@ def main():
     # OpenAI API Key
     api_key: str = sys.argv[1]
     # User Message
-    message: str = sys.argv[2]
+    message: str = input("Message: ")
 
-    response_message: str | None = request_openai(
+    # Request to OpenAI API
+    response_message: str = request_openai(
         api_key=api_key,
         request_content=message,
     )
