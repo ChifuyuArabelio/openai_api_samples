@@ -1,1 +1,1 @@
-# openai_api_samples
+# OpenAI API Request Samples.

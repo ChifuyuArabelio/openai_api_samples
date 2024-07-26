@@ -26,13 +26,13 @@ gpt_model: str = "gpt-4o-mini"
 
 def request_openai(
     api_key: str,
-    user_message: str,
+    request_content: str,
 ) -> str | None:
     """Request to OpenAI API
 
     Args:
         api_key (str): OpenAI API Key
-        user_message (str): User Message
+        request_content (str): Request Content
 
     Returns:
         str | None: Response Message
@@ -45,21 +45,27 @@ def request_openai(
 
         # Request to OpenAI API
         chat_completion: ChatCompletion = client.chat.completions.create(
-            model=gpt_model,
             messages=[
                 {
                     "role": "user",
-                    "content": user_message,
+                    "content": request_content,
                 },
             ],
-            max_tokens=50,
-            temperature=0.7,
-            n=1,
+            model=gpt_model,
+            max_tokens=70,
+            n=2,
+            stop=None,
+            temperature=1,
         )
-        data = chat_completion.choices[0]
-        message: ChatCompletionMessage = data.message
-        content: str | None = message.content
-        return content
+        print(chat_completion)
+
+        # Response Content
+        response_content = ""
+        for _choice in chat_completion.choices:
+            _message: ChatCompletionMessage = _choice.message
+            _content: str | None = _message.content
+            response_content += _content
+        return response_content
     except Exception as ex:
         return str(ex)
 
@@ -69,11 +75,11 @@ def main():
     # OpenAI API Key
     api_key: str = sys.argv[1]
     # User Message
-    user_message: str = sys.argv[2]
+    message: str = sys.argv[2]
 
     response_message: str | None = request_openai(
         api_key=api_key,
-        user_message=user_message,
+        request_content=message,
     )
     print(response_message)
 
